@@ -1,7 +1,7 @@
-name: "MOD007691"
+name: MOD007691
 output_dir: ../docs
 navbar:
-  title: "MOD007691"
+  title: MOD007691
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/julianflowers12/MOD007691
 output:
   workflowr::wflow_html:
     toc: yes
