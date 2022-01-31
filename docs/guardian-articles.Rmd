@@ -1,0 +1,68 @@
+---
+title: "guardian"
+author: "Julian Flowers"
+date: "22/01/2022"
+output: html_document
+params:
+   search: "microplastic pollution"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(myScrapers)
+```
+
+## search Guardian for articles on wildlife conservation
+
+## reads open data platform
+
+```{r, cache=TRUE}
+
+library(guardianapi)
+
+library(lubridate)
+
+library(tidyverse)
+
+guardianapi::gu_api_key()
+
+
+last_month <- guardianapi::gu_content(query = "microplastic", from_date = today() - days(365), to_date = today())
+
+glimpse(last_month)
+
+last_month_articles <- last_month %>%
+  mutate(date = ymd(str_sub(web_publication_date, 1, 10))) %>%
+  select(date, web_title, headline, short_url, section_name) 
+
+last_month_articles$headline
+```
+
+
+```{r}
+
+pqs <- function(start_date, dept = "health and social care"){
+  if(!require(hansard))devtools::install_github("EvanOdell/hansard")
+  require(hansard)
+  require(dplyr)
+  require(tibble)
+
+  cat("Please wait...")
+  
+  dhsc2018 <- hansard_all_answered_questions(start_date = start_date, answering_body = dept) 
+  health_qn <- dhsc2018 %>%
+    select(answer_date = date_of_answer_value, question_text,  answer_text = answer_text_value, answering_member = answering_member_printed_value,
+                  hansard_category = hansard_heading_value) %>%
+             mutate(answer_text = str_remove(answer_text, "\\<p\\>"))
+  health_qn %>%
+    as_tibble()
+  
+}
+
+pqs(start_date = as.Date("2021-01-01"), "environment, food and rural affairs") %>%
+  filter(str_detect(answer_text, "microplastic")) %>%
+  select(-answering_member) %>%
+  flextable::flextable(cwidth = 8)
+
+```
+ 
