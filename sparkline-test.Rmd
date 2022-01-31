@@ -1,0 +1,53 @@
+---
+title: "Sparklines"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*.
+
+```{r}
+library(htmlwidgets)
+library(sparkline)
+library(tidyverse)
+
+df <- read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=region&metric=uniqueCasePositivityBySpecimenDateRollingSum&format=csv")
+
+library(formattable)
+library(sparkline)
+
+df_nested <- df %>% group_by(areaName) %>% nest(date, uniqueCasePositivityBySpecimenDateRollingSum)
+
+r1 <- data.frame(df_nested$data[1])
+r2 <- data.frame(df_nested$data[2])
+r3 <- data.frame(df_nested$data[3])
+r4 <- data.frame(df_nested$data[4])
+r5 <- data.frame(df_nested$data[5])
+r6 <- data.frame(df_nested$data[6])
+r7 <- data.frame(df_nested$data[7])
+r8 <- data.frame(df_nested$data[8])
+r9 <- data.frame(df_nested$data[9])
+
+
+```
+
+
+Inline line graphs `r sparkline(r1$uniqueCasePositivityBySpecimenDateRollingSum)`
+
+| Sparkline  | Region       
+|-------------------|------
+| `r sparkline(r1$uniqueCasePositivityBySpecimenDateRollingSum)` london  |
+| `r sparkline(r2$uniqueCasePositivityBySpecimenDateRollingSum)`|
+| `r sparkline(r3$uniqueCasePositivityBySpecimenDateRollingSum)`|
+| `r sparkline(r4$uniqueCasePositivityBySpecimenDateRollingSum)`|
+| `r sparkline(r5$uniqueCasePositivityBySpecimenDateRollingSum)`|
+| `r sparkline(r6$uniqueCasePositivityBySpecimenDateRollingSum)`|
+| `r sparkline(r7$uniqueCasePositivityBySpecimenDateRollingSum)`|
+| `r sparkline(r8$uniqueCasePositivityBySpecimenDateRollingSum)`|
+| `r sparkline(r9$uniqueCasePositivityBySpecimenDateRollingSum)`|
+

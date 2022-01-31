@@ -1,0 +1,180 @@
+---
+title: "Platic pollution and health"
+output: 
+    html_document:
+       toc: yes
+       toc_float: yes
+       md_keep: yes
+       theme: flatly
+       code_folding: hide
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(pacman)
+p_load(readtext, quanteda, tidytext, here, tidyverse, DT, myScrapers, europepmc, tidypmc, kableExtra)
+```
+
+## Govt enquiry into plastic pollution
+
+```{r}
+
+## import pdfs
+
+path <- here("docs")
+pdfs <- list.files(path, "pdf", full.names = T)
+docs <- map(pdfs, readtext)
+docs
+
+```
+
+### 
+
+### Report conclusions and recommendations:
+
+<https://publications.parliament.uk/pa/cm201617/cmselect/cmenvaud/179/17908.htm?utm_source=179&utm_medium=crbullet&utm_campaign=modulereports>
+
+```{r}
+
+docs[[1]] %>%
+  #(str_detect(text, "Conclusions")) %>%
+  select(text) %>%
+  knitr::kable()
+
+
+
+```
+
+### Govt. response
+
+```{r}
+
+docs[[2]] %>%
+  #(str_detect(text, "Conclusions")) %>%
+  select(text) %>%
+  knitr::kable()
+
+```
+
+### What is the impact on human health?
+
+### Split docs into paragraphs
+
+```{r}
+
+para_1 <- docs[[1]] %>%
+  unnest_tokens("para", text, "paragraphs")
+
+para_2 <- docs[[2]] %>%
+  unnest_tokens("para", text, "paragraphs")
+
+```
+
+## Find mentions of 'health'
+
+### Report:
+
+```{r}
+
+health_1 <- para_1 %>%
+  filter(str_detect(para, "health"))
+
+health_1 %>%
+  knitr::kable(cwidth = 8)
+
+```
+
+### Response:
+
+```{r}
+
+health_2 <- para_2 %>%
+  filter(str_detect(para, "health"))
+
+health_2 %>%
+  knitr::kable(cwidth = 8)
+
+```
+
+## Face masks and plastic pollution
+
+```{r, cache=TRUE}
+
+search <- "(face masks OR microplastic) pollution human[mh]"
+
+start <- 2010
+end <- 2021
+
+n <- 484
+key <- Sys.getenv("ncbi_key")
+
+res <- pubmedAbstractR(search = search, n = n , start = start, end = end, ncbi_key = key, authors = T)
+
+res$abstracts %>%
+  filter(journal ==  "Sci Total Environ") %>%
+  select(year, pmid, title) %>%
+  distinct() %>%
+  mutate(select = 0) %>%
+  DT::datatable(editable = TRUE, filter = "top", 
+                extensions = 'Buttons', options = list(pageLength = 25, dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel', 'pdf', 'print')
+  ))
+
+
+
+```
+
+```{r, cache=TRUE}
+
+selected_refs <- read_csv("data/human-health-mpp-refs.csv", show_col_types = F)
+
+
+details <- map(selected_refs$pmid, epmc_details) %>%
+  map(., "basic") %>%
+  map(., possibly("pmcid", otherwise = NA_real_)) %>%
+  as.character()
+  
+details <- details[details %>%
+  str_detect(., "^PMC")]
+  
+
+ft <- map(details, pmc_xml)
+ftext <- map(ft, pmc_text)
+
+ft_refs <- map(ft, pmc_reference)
+ft_meta <- map(ft, pmc_metadata)
+
+ft_meta %>%
+  enframe() %>%
+  unnest_auto("value") %>%
+  knitr::kable() %>%
+  kableExtra::kable_classic_2()
+
+
+
+```
+
+```{r}
+
+ft_table <- map(ft, pmc_table)
+ft_table
+
+```
+
+
+
+## Country level estimates of volume of plastic pollution from PPE/face masks
+
+After @Chowdhury2021
+
+```{r, eval = FALSE}
+
+ft_table[[17]][4] %>%
+  knitr::kable() %>%
+  kableExtra::kable_styling()
+
+```
+
+
+
+## References
