@@ -7,7 +7,7 @@ params:
    search: "microplastic pollution"
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALS
 knitr::opts_chunk$set(echo = TRUE)
 library(myScrapers)
 ```
@@ -29,7 +29,8 @@ guardianapi::gu_api_key()
 
 last_month <- guardianapi::gu_content(query = "microplastic", from_date = today() - days(365), to_date = today())
 
-glimpse(last_month)
+last_month %>%
+  DT::datatable()
 
 last_month_articles <- last_month %>%
   mutate(date = ymd(str_sub(web_publication_date, 1, 10))) %>%
