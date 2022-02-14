@@ -1,0 +1,66 @@
+---
+title: "MOD007691"
+author: '2050707'
+date: "14/02/2022"
+output:
+  word_document: default
+  html_document:
+    number_sections: yes
+subtitle: Assignment E010
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+1.  The Chartered Institute of Environmental Health (CIEH) represents Environmental Health practitioners (EHPs) across the UK.
+
+2.  Since 1883 CIEH has developed and promoted environmental standards that contribute to better public health and is responsible for training and accrediting EHPs.
+
+3.  Our mission is:
+
+> *"Safer, cleaner and healthier environments for the benefit of all"*
+
+4.  EHPs work in local authorities and independently to ensure food safety standards, environmental protection and support general health improvement.
+
+5.  We welcome the opportunity to submit evidence on the growing threat plastic pollution poses to food safety, the environment and public health.
+
+# Evidence
+
+## The scale of the problem
+
+1.  Since the1950s more than 8.5 billion tons of plastic have been generated of which an estimated 600 million tons have been recycled (7%) and 5700 million tons (67%) has been discarded or burned.[^1] plastic waste.(@geyer2017) Over than 300 million tons are produced each year, of which 40% are single-use.(@waring2018a)
+
+2.  In a single year over 10 million tons of plastic waste is estimated to enter the oceans from the 192 coastal countries around the world. (@jambeck2015)
+
+3.  Most plastic waste ends up in landfill sites, waterways and the oceans. (@ritchie)
+
+4.  The effect of ultra-violet light in combination with attrition from wind and waves degrades larger plastic pieces into microplastics (MPs)  - particles \< 5mm in size; and nanoplastics (NPs) - particles under 0.1 micrometer.
+
+5.  Although macroplastics can directly harm larger animals, MPs and NPs are now ubiquitous in the environment and there is widespread human and ecosystem exposure.
+
+6.  Microplastic pollution has been found in the Antarctic (@cunningham), and in deep-see marine animals in the Mariana Trench at a depth of 10,000m. (@jamieson2019)
+
+[^1]: The rest is still in use
+
+## Human exposure to plastics
+
+### Airborne
+
+### Food and gut health
+
+### Measuring exposure
+
+## Plastic exposure and public health
+
+## Future threats
+
+## 
+
+# Recommendations
+
+# References
+
