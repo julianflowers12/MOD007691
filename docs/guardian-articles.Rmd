@@ -7,30 +7,28 @@ params:
    search: "microplastic pollution"
 ---
 
-```{r setup, include=FALS
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE) 
 library(myScrapers)
-```
+
+library(pacman)
+p_load(quanteda.textmodels, quanteda.textstats, guardianapi, myScrapers, lubridate, tidyverse)
 
 ## search Guardian for articles on wildlife conservation
 
 ## reads open data platform
 
-```{r, cache=TRUE}
 
-library(guardianapi)
-
-library(lubridate)
-
-library(tidyverse)
-
-guardianapi::gu_api_key()
+guardianapi::gu_api_key(check_env = TRUE)
 
 
-last_month <- guardianapi::gu_content(query = "microplastic", from_date = today() - days(365), to_date = today())
+last_month <- guardianapi::gu_content(query = "plastic", from_date = today() - days(365), to_date = today())
 
 last_month %>%
-  DT::datatable()
+  filter(section_id == "environment")
+
+
 
 last_month_articles <- last_month %>%
   mutate(date = ymd(str_sub(web_publication_date, 1, 10))) %>%
@@ -38,7 +36,6 @@ last_month_articles <- last_month %>%
 
 last_month_articles$headline
 ```
-
 
 ```{r}
 
@@ -64,6 +61,73 @@ pqs(start_date = as.Date("2021-01-01"), "environment, food and rural affairs") %
   filter(str_detect(answer_text, "microplastic")) %>%
   select(-answering_member) %>%
   flextable::flextable(cwidth = 8)
+  
+  
+pq_health <- pqs(start_date = as.Date("2021-01-01"), "health and social care") 
+
+pq_health %>%
+  filter(str_detect(answer_text, "microplastic")) %>%
+  select(-answering_member) %>%
+  flextable::flextable(cwidth = 8)
 
 ```
- 
+
+## Speeches
+
+```{r}
+
+library(data.table)
+library(readr)
+library(stringr)
+library(dplyr)
+
+speeches <- fread("~/Dropbox/My Mac (Julians-MBP-2)/Downloads/hansard-speeches-v310.csv")
+
+
+
+head(speeches)
+
+speeches[year == 2021, .N, by = .(major_heading)][order(-N)]
+pp <- speeches[year >= 2020 & str_detect(speech, "[Pp]lastic|health"), ][]
+pp
+
+```
+
+```{r}
+
+library(quanteda)
+
+pp %>%
+  count(display_as, party, minor_heading)
+
+corpus <- corpus(pp, text_field = "speech")
+tokens <- quanteda::tokens(corpus, remove_punct = TRUE) %>%
+  tokens_remove(stopwords())
+
+dfm <- dfm(tokens)
+  
+topfeatures(dfm, 500)
+
+```
+
+## Plastic and microplastics and health
+
+```{r}
+
+toks_pp <- pp %>%
+  corpus(text_field = "speech") %>%
+  tokens(char_tolower("word")) %>%
+  tokens_remove(stopwords()) 
+
+fcm <- fcm(toks_pp)
+
+
+```
+
+```{r}
+
+
+
+
+
+```
