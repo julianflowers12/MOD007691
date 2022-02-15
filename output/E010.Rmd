@@ -38,15 +38,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 3.  Most plastic waste ends up in landfill sites, waterways and the oceans. (@ritchie)
 
-4.  The effect of ultra-violet light in combination with attrition from wind and waves degrades larger plastic pieces into microplastics (MPs)  - particles \< 5mm in size; and nanoplastics (NPs) - particles under 0.1 micrometer.
+4.  The effect of ultra-violet light in combination with attrition from wind and waves degrades larger plastic pieces into microplastics (MPs) - particles \< 5mm in size; and nanoplastics (NPs) - particles under 0.1 micrometer.
 
 5.  Although macroplastics can directly harm larger animals, MPs and NPs are now ubiquitous in the environment and there is widespread human and ecosystem exposure.
 
 6.  Microplastic pollution has been found in the Antarctic (@cunningham), and in deep-see marine animals in the Mariana Trench at a depth of 10,000m. (@jamieson2019)
 
-[^1]: The rest is still in use
+## Human exposure to microplastics
 
-## Human exposure to plastics
+1.  There are 3 main routes for human MP exposure - ingestion, inhalation and transdermal (through the skin).
+
+2.  Ingestion occurs principally through consumption of contaminated drinking water and seafood.
+
+3.  Inhalation  - microfibres from clothing, tyre and road wear
 
 ### Airborne
 
@@ -56,11 +60,28 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Plastic exposure and public health
 
+### Cellular effects
+
+### GI effects
+
+### Neurotoxicity
+
 ## Future threats
 
 ## 
 
 # Recommendations
 
+1.  Actions to reduce exposure
+
+2.  Waste management
+
+3.  Improved measurement and surveillance of exposure
+
+4.  Sewage and water
+
+5.  Plastic
+
 # References
 
+[^1]: The rest is still in use
