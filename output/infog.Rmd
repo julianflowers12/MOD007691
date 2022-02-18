@@ -1,0 +1,115 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    theme: 
+        version: 4
+        bootswatch: minty
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard); library(tidyverse); library(fontawesome)
+
+fontawesome::fa("mask")
+
+data <- read_rds("mask_pollution.rds")
+```
+
+```{r}
+uk <- data %>%
+  filter(Countries == "United Kingdom")
+```
+
+
+```{r}
+
+dfm <- uk %>%
+  filter(metric == "Daily face mask usage") %>%
+  pluck("values")
+
+
+sm_waste <- uk %>%
+  filter(metric == "Plastic waste from SM in ton") %>%
+  pluck("values")
+
+ff2 <- uk %>%
+  filter(metric == "Plastic waste from N95 in ton") %>%
+  pluck("values")
+
+
+
+```
+
+
+```{r fig.height=4}
+
+
+waste <- data %>%
+  arrange(Countries) %>%
+  filter(metric == "Total plastic waste generation in ton") %>%
+  mutate(values = parse_number(values), 
+         uk = ifelse(Countries == "United Kingdom", "uk", "n")) %>%
+  ggplot() +
+  geom_col(aes(reorder(Countries, values), values, fill = uk), show.legend = FALSE) +
+  coord_flip() +
+  scale_y_continuous(label = scales::comma) +
+  scale_fill_manual(values = c("grey", "blue")) +
+  labs(y = "Plastic waste from masks in tonnes", 
+       x = "") +
+  theme_minimal() 
+
+
+```
+
+
+
+Row {data-width=650}
+-----------------------------------------------------------------------
+### Face masks per day
+
+```{r}
+valueBox(dfm, icon = "fa-mask" )
+```
+
+### Surgical mask waste (tonnes)
+
+```{r}
+
+valueBox(sm_waste, icon = "fa-mask" )
+
+
+```
+
+### N95 waste
+
+```{r}
+valueBox(ff2, icon = "fa-mask" )
+
+```
+
+
+### Chart A
+
+```{r}
+
+```
+
+Row {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+waste
+
+```
+
+### Chart C
+
+```{r}
+
+```
+

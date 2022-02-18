@@ -1,0 +1,200 @@
+---
+title: "Rpid review of plastic pollution from PPE"
+author: '2050707'
+date: "18/02/2022"
+output: 
+   html_document:
+     toc: yes
+     toc_float: yes
+---
+
+## Look for reviews of COVID or PPE related plastic pollution
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      comment = "#>", 
+                      collapse = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      cache = TRUE)
+
+library(pacman)
+p_load(myScrapers, europepmc, tidypmc, RISmed, glue)
+
+search <- "(covid OR ppe OR facemask) plastic pollution review[pt]"
+start <- 2020
+end <- 2022
+n <- 114
+key <- Sys.getenv("ncbi_key")
+
+
+res <- pubmedAbstractR(search = search, n = n, start = start, end = end, ncbi_key = key)
+
+res$abstracts %>%
+  select(title) %>%
+  DT::datatable(options = list(pageLength = 100))
+
+sel <- c(1:9, 
+         11, 13, 14, 16:18, 
+         25, 28, 31)
+
+res_sel <- res$abstracts[sel, ]
+
+
+```
+
+Search is 
+`r res$search`
+
+No. of abstracts returned: `r res$n_articles`
+
+
+
+```{r}
+# write a function to identify which articles have free full text
+
+get_pmcid <- function(df){
+
+  require(europepmc)
+  require(tidyverse)
+  pmids <- pluck(df, "pmid")
+  details <- purrr::map(pmids, epmc_details) %>%
+    purrr::map(., "basic")
+  pmcid <- purrr::map(details, "pmcid")
+  return(purrr::flatten(pmcid))
+
+}
+
+pmcids <- get_pmcid(df = res_sel)
+
+xml <- purrr::map(pmcids, tidypmc::pmc_xml)       # extract xml 
+text <- purrr::map(xml, tidypmc::pmc_text)        # extract text
+tables <- purrr::map(xml, tidypmc::pmc_table)     # extract tables
+meta <- purrr::map(xml, tidypmc::pmc_metadata)    # extract metadata
+captions <- purrr::map(xml, tidypmc::pmc_caption) # extact figure captions
+refs <- purrr::map(xml, tidypmc::pmc_reference)   # extract references
+```
+## Review relevant tables
+
+```{r}
+
+titles <- purrr::map(meta, "Title")
+
+tables
+
+### select tables
+
+tab_sel <- c(2, 5, 6)
+
+tab_selected <- tables[tab_sel]
+
+########
+
+org_compunds_by_country <- tab_selected[[2]]$`Table 4`%>%
+  DT::datatable()
+
+tab_selected[[2]]$`Table 4`%>%
+  DT::datatable()
+
+
+
+
+
+```
+
+## Broader search - primary
+
+
+
+```{r}
+
+search <- "(covid OR ppe OR facemask) plastic pollution"
+start <- 2020
+end <- 2022
+n <- 123
+key <- Sys.getenv("ncbi_key")
+
+
+res1 <- pubmedAbstractR(search = search, n = n, start = start, end = end, ncbi_key = key)
+
+res1$abstracts %>%
+  select(title) %>%
+  DT::datatable(options = list(pageLength = 100))
+
+
+
+```
+
+```{r}
+
+sel1 <- c(7, 8, 10, 24, 26, 39, 53, 54, 55, 56, 59, 62, 63, 64, 66, 67, 68, 73, 87, 100, 107, 109, 112, 116, 117, 118, 120, 122, 123 )
+
+res1_sel1 <- res1$abstracts[sel1, ]
+
+```
+
+
+
+```{r}
+
+pmcids1 <- get_pmcid(df = res1_sel1)
+
+xml1 <- purrr::map(pmcids1, tidypmc::pmc_xml)       # extract xml 
+text1 <- purrr::map(xml1, tidypmc::pmc_text)        # extract text
+tables1 <- purrr::map(xml1, tidypmc::pmc_table)     # extract tables
+meta1 <- purrr::map(xml1, tidypmc::pmc_metadata)    # extract metadata
+captions1 <- purrr::map(xml1, tidypmc::pmc_caption) # extact figure captions
+refs1 <- purrr::map(xml1, tidypmc::pmc_reference)   # extract references
+
+```
+
+## UK face mask pollution in figures
+
+```{r}
+
+t1 <- tables1[[17]]
+t2 <- tables1[[18]]
+t3 <- tables[[7]]
+t4 <- tables1[[3]]
+
+t11 <- tables1[[17]][1]$`Table 1`
+t12 <- tables1[[17]][2]$`Table 2`
+t13 <- tables1[[17]][3]$`Table 3`
+t14 <- tables1[[17]][4]$`Table 4` 
+
+t12 <- t12 %>% select(-`Income status`)
+t14 <- t14 %>% rename(Countries = Country)
+
+t <- list(t11, t12, t13, t14)
+
+
+t_sum <- map_dfr(t, ~(pivot_longer(.x, names_to = "metric", values_to = "values", cols = 2:ncol(.x))))
+
+uk <- t_sum %>%
+  filter(Countries == "United Kingdom")
+
+uk %>%
+  knitr::kable()
+
+
+```
+
+```{r, eval = FALSE}
+
+library(spacyr)
+library(quanteda)
+library(tidytext)
+
+res1_sel1
+
+anno <- map_dfr(text1, data.frame)
+
+anno1 <- spacy_parse(anno$text, nounphrase = TRUE, pos = TRUE, tag = TRUE)
+
+unnest_tokens(anno1, word, token) %>%
+  anti_join(stop_words)
+
+
+
+```
+

@@ -44,13 +44,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 6.  Microplastic pollution has been found in the Antarctic (@cunningham), and in deep-see marine animals in the Mariana Trench at a depth of 10,000m. (@jamieson2019)
 
+[^1]: The rest is still in use
+
 ## Human exposure to microplastics
 
 1.  There are 3 main routes for human MP exposure - ingestion, inhalation and transdermal (through the skin).
 
-2.  Ingestion occurs principally through consumption of contaminated drinking water and seafood.
+2.  Ingestion occurs principally through consumption of contaminated drinking water and seafood. Most MPs will pass through the digestive system but there is evidence that PMs can enter the body through lymphoid tissues in the gut (Peyer's patches) where the particles can be ingested by specialised M-cells. This can lead to localised inflammation.
 
-3.  Inhalation  - microfibres from clothing, tyre and road wear
+3.  One study comparing MP excretion in 50 healthy adults with 52 patients with Inflammatory Bowel Disease, found significantly more items in the faeces of the IBD group than the healthy group (41.8 items/gm vs. 28.0 items/gm).@yan2022
+
+4.  Inhalation - microfibres from clothing, tyre and road wear
 
 ### Airborne
 
@@ -58,7 +62,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Measuring exposure
 
-## Plastic exposure and public health
+-   MPs have been found in human faeces and
+
+-   In one Italian study of 6 post-partum plcental tissues using Raman specostrcopy[^2] found evidence of MPs in 4. (@ragusa2021)
+
+[^2]: A technque for charactising plastic particles
+
+## Potential harmful effects
 
 ### Cellular effects
 
@@ -83,5 +93,3 @@ knitr::opts_chunk$set(echo = TRUE)
 5.  Plastic
 
 # References
-
-[^1]: The rest is still in use
