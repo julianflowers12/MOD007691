@@ -14,16 +14,23 @@ library(myScrapers)
 
 library(pacman)
 p_load(quanteda.textmodels, quanteda.textstats, guardianapi, myScrapers, lubridate, tidyverse)
+pacman::p_load_gh("trinker/entity")
+```
+
+
 
 ## search Guardian for articles on wildlife conservation
 
 ## reads open data platform
 
 
+```{r}
+
+
 guardianapi::gu_api_key(check_env = TRUE)
 
 
-last_month <- guardianapi::gu_content(query = "plastic", from_date = today() - days(365), to_date = today())
+last_month <- guardianapi::gu_content(query = "PPE", from_date = today() - days(365), to_date = today())
 
 last_month %>%
   filter(section_id == "environment")
@@ -57,18 +64,26 @@ pqs <- function(start_date, dept = "health and social care"){
   
 }
 
-pqs(start_date = as.Date("2021-01-01"), "environment, food and rural affairs") %>%
-  filter(str_detect(answer_text, "microplastic")) %>%
-  select(-answering_member) %>%
-  flextable::flextable(cwidth = 8)
-  
-  
-pq_health <- pqs(start_date = as.Date("2021-01-01"), "health and social care") 
+pq_ppe <- pqs(start_date = as.Date("2020-01-01"), "health and social care") %>%
+  filter(str_detect(hansard_category, "NHS: Protective Clothing")) %>%
+  select(-answering_member)
 
-pq_health %>%
-  filter(str_detect(answer_text, "microplastic")) %>%
-  select(-answering_member) %>%
-  flextable::flextable(cwidth = 8)
+pq_ppe %>%
+  filter(str_detect(answer_text, "plastic")) %>%
+  reactable::reactable(searchable = TRUE, sortable = TRUE)
+
+
+rb <- hansard::hansard_research_briefings()
+  
+hcb_pp <- rb %>%
+  filter(str_detect(title, "[Pp]lastic"))
+
+hcb_pp %>%
+  unnest("section", names_repair = "universal") %>%
+  unnest("topic")
+
+rb %>%
+  filter(str_detect(title, "Mask"))
 
 ```
 
@@ -88,10 +103,22 @@ speeches <- fread("~/Dropbox/My Mac (Julians-MBP-2)/Downloads/hansard-speeches-v
 head(speeches)
 
 speeches[year == 2021, .N, by = .(major_heading)][order(-N)]
-pp <- speeches[year >= 2020 & str_detect(speech, "[Pp]lastic|health"), ][]
-pp
+pp <- speeches[year >= 2020 & str_detect(speech, "PPE"), ][]
+
+pp[, .N, by = .(minor_heading)][order(-N)]
+pp_ppe <- pp[str_detect(minor_heading, "PPE")|str_detect(minor_heading, "Personal Protective Equipment"), ][,date := janitor::excel_numeric_to_date(as.numeric(date)) ][order(desc(date))]
 
 ```
+
+```{r}
+
+plot(money_entity(pp_ppe$speech))
+  
+
+
+
+```
+
 
 ```{r}
 
@@ -100,9 +127,14 @@ library(quanteda)
 pp %>%
   count(display_as, party, minor_heading)
 
-corpus <- corpus(pp, text_field = "speech")
+corpus <- corpus(pp_ppe, text_field = "speech")
+
+
 tokens <- quanteda::tokens(corpus, remove_punct = TRUE) %>%
-  tokens_remove(stopwords())
+  tokens_remove(stopwords()) %>%
+  tokens_ngrams(n = 1:2)
+
+kwic(tokens, "items", window = 10)
 
 dfm <- dfm(tokens)
   
