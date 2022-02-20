@@ -7,6 +7,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, message = FALSE)
 library(flexdashboard); library(tidyverse); library(fontawesome); library(ggpubr); library(ggimage); library(magick)
 source("../code/infographic.R")
 data <- read_rds("mask_pollution.rds")
@@ -30,8 +31,19 @@ i5 <- image_read("https://media.istockphoto.com/vectors/disposing-of-ppe-face-ma
 i6 <- image_read("https://images.foxtv.com/static.fox13news.com/www.fox13news.com/content/uploads/2020/04/932/524/cdc-bandana-16x9.jpg?width=300")  %>%
   image_write("../images/i6.jpg")
 
-i7 <- image_read("https://pbs.twimg.com/media/ExLo3tcVoA8IPxT?format=jpg&name=medium")  %>%
-  image_write("../images/i7.jpg")
+i7 <- image_read("https://pbs.twimg.com/media/ExLo3tcVoA8IPxT?format=jpg") %>% image_write("../images/i7.jpg")
+
+image_scaler <- function(image, width = 300){
+  require(magick)
+  scaled <- image_scale(image_read(image), 180)
+
+  
+}
+
+images <- list.files("../images", pattern =  "*", full.names = TRUE)
+
+
+i <- purrr::map(images, ~(image_scaler(.x, width = 180)))
 
 ```
 
@@ -88,23 +100,6 @@ waste <- data %>%
 ```
 
 
-
-
-
-Row
-------------------------------------------------------------------------
-### Plastic pollution
-***
-* Plastic pollution
-* Plastic pollution
-* Single use plastics
-
-
-***
-Some commentary
-
-### Details
-
 Row
 -----------------------------------------------------------------------
 ### Face masks per day disposed of in the UK
@@ -129,6 +124,9 @@ valueBox(ff2, icon = "fa-mask" )
 
 ```
 
+Row
+-------------------------------------------------------
+
 ### Plastic waste around the world
 
 ```{r, echo = FALSE, fig.height=4}
@@ -147,9 +145,6 @@ ggbackground(now, "../images/plastic_polution_1.jpeg") +
 ```
 
 
-#Row {data-height=600}
------------------------------------------------------------------------
-
 ### UK face mask rate
 
 ```{r, echo=FALSE, fig.height=4}
@@ -162,6 +157,7 @@ ggbackground(waste, img)
 
 ```
 
+
 Column
 -----------------------------------------------------------
 
@@ -169,12 +165,15 @@ Column
 
 **Less of this...**
 
-![](../images/i1.jpg)
+![](../images/ppe_poll_2.jpeg)
 
+*****
 
 **We need more of this...**
 
-![](../images/i7.jpg) ![](../images/i6.jpg)
+![](../images/i7.jpg) 
+![](../images/i6.jpg) 
+![](../images/i5.jpg)
 
 
 
