@@ -68,7 +68,8 @@ gw <- gw %>%
   filter(!region %in% c("Antigua and Barbuda", "Trinidad and Tobago", "British Virgin Islands", "Channel Islands",
                         "French Polynesia", "Guam", "Micronesia" ))
 
-View(gw)
+gw %>%
+  filter(Entity == "United Kingdom")
 
 now <- map_data("world") %>%
 
@@ -80,10 +81,11 @@ now <- map_data("world") %>%
   #count(lat, sort = TRUE) %>%
   #filter(n > 1)
   ggplot(aes(long, lat)) +
-  geom_polygon(aes(group = group, fill = `2010`), colour = "lightgrey") +
+  geom_polygon(aes(group = group, fill = `2010`), colour = "black") +
   coord_map(projection = "albers", parameters = c(0, 0)) +
-  scale_fill_distiller(direction = 1, palette = "Purples") +
+  scale_fill_distiller(direction = -1, palette = "RdYlGn") +
   theme_void()
+
 
 future <- map_data("world") %>%
   left_join(gw, by = c("region")) %>%
@@ -103,5 +105,35 @@ library(cowplot)
 
 cowplot::plot_grid(now, future,
                    labels = c("2010", "2025"))
+
+
+## Benson et al
+
+library(myScrapers)
+library(europepmc)
+library(tidypmc)
+
+# url <- "https://www.sciencedirect.com/science/article/pii/S2405844021004485#tbl1"
+#
+# search <- "COVID pollution"
+#
+# n <- 1437
+# start <- 2021
+# end <- 2022
+# ncbi_key <- Sys.getenv("ncbi_key")
+#
+# out <- pubmedAbstractR(search = search, start = start, end = end, ncbi_key = ncbi_key, n = n)
+# pmid <- out$abstracts %>%
+#   filter(str_detect(title, "COVID pollution:")) %>%
+#   pluck("pmid")
+#
+# pmcid <- epmc_details(pmid)$basic$pmcid
+#
+# tables <- tidypmc::pmc_xml(pmcid) %>%
+#   pmc_table()
+#
+#
+#
+
 
 

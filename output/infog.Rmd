@@ -1,21 +1,55 @@
 ---
-title: "Untitled"
+title: "Preventing Pollution from PPE"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: rows
+    orientation: columns
     vertical_layout: fill
-    theme: 
-        version: 4
-        bootswatch: minty
 ---
 
 ```{r setup, include=FALSE}
-library(flexdashboard); library(tidyverse); library(fontawesome)
-
-fontawesome::fa("mask")
-
+knitr::opts_chunk$set(cache=TRUE, message = FALSE)
+library(flexdashboard); library(tidyverse); library(fontawesome); library(ggpubr); library(ggimage); library(magick)
+source("../code/infographic.R")
 data <- read_rds("mask_pollution.rds")
+data_1 <- read_rds("../data/covid_poll.rds")
 ```
+
+
+
+```{r images}
+ 
+i1 <- image_read("https://aqicn.org/images/masks/3m-9501.5.jpg") %>%
+  image_write("../images/i1.jpg")
+i2 <- image_read("https://unctad.org/sites/default/files/2020-10/2020-27-07_Plastic-pollution_1200x675.jpg")  %>%
+  image_write("../images/i2.jpg")
+i3 <- image_read("https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/three-different-protection-face-masks-coronavirus-royalty-free-image-1627509000.jpg")  %>%
+  image_write("../images/i3.jpg")
+i4 <- image_read("https://static.independent.co.uk/s3fs-public/thumbnails/image/2020/07/10/17/istock-1225880373.jpg?width=300")  %>%
+  image_write("../images/i4.jpg")
+i5 <- image_read("https://media.istockphoto.com/vectors/disposing-of-ppe-face-mask-safely-vector-id1249867483?k=20&m=1249867483&s=170667a&w=0&h=gPhXUVXRJuMn_deaS8vg9PkgiGEFCUb0DD6HsnvVGXo=")  %>%
+  image_write("../images/i5.jpg")
+i6 <- image_read("https://images.foxtv.com/static.fox13news.com/www.fox13news.com/content/uploads/2020/04/932/524/cdc-bandana-16x9.jpg?width=300")  %>%
+  image_write("../images/i6.jpg")
+
+i7 <- image_read("https://pbs.twimg.com/media/ExLo3tcVoA8IPxT?format=jpg") %>% image_write("../images/i7.jpg")
+
+image_scaler <- function(image, width = 300){
+  require(magick)
+  scaled <- image_scale(image_read(image), 180)
+
+  
+}
+
+images <- list.files("../images", pattern =  "*", full.names = TRUE)
+
+
+i <- purrr::map(images, ~(image_scaler(.x, width = 180)))
+
+```
+
+
+
+
 
 ```{r}
 uk <- data %>%
@@ -55,61 +89,91 @@ waste <- data %>%
   geom_col(aes(reorder(Countries, values), values, fill = uk), show.legend = FALSE) +
   coord_flip() +
   scale_y_continuous(label = scales::comma) +
-  scale_fill_manual(values = c("grey", "blue")) +
+  scale_fill_manual(values = c("red", "black")) +
   labs(y = "Plastic waste from masks in tonnes", 
        x = "") +
-  theme_minimal() 
+  theme_minimal() +
+  theme(axis.text = element_text(colour = "white", size = 14, face = "bold"), 
+        axis.title = element_text(colour = "white", size = 14, face = "bold"))
 
 
 ```
 
 
-
-Row {data-width=650}
+Row
 -----------------------------------------------------------------------
-### Face masks per day
+### Face masks per day disposed of in the UK
 
-```{r}
-valueBox(dfm, icon = "fa-mask" )
+```{r, echo=FALSE}
+valueBox(dfm, icon = "fa-pencil" )
 ```
 
-### Surgical mask waste (tonnes)
+### Which creates surgical mask waste (tons) per year
 
-```{r}
+```{r, echo=FALSE}
 
 valueBox(sm_waste, icon = "fa-mask" )
 
 
 ```
 
-### N95 waste
+### And N95 waste (tons) per year
 
-```{r}
+```{r,echo=FALSE}
 valueBox(ff2, icon = "fa-mask" )
 
 ```
 
+Row
+-------------------------------------------------------
 
-### Chart A
+### Plastic waste around the world
 
-```{r}
+```{r, echo = FALSE, fig.height=4}
+
+img1 = paste0(here::here() ,"/images/plastic_pollution.jpeg")
+
+now + ggtitle("Global plastic polluters") +
+  theme(plot.title = element_text(size = 40, face = "bold"))
+
+ggbackground(now, "../images/plastic_polution_1.jpeg") +
+  ggtitle("Global plastic polluters") +
+  theme(plot.title = element_text(size = 40, face = "bold"))
+
+
+
+```
+
+
+### UK face mask rate
+
+```{r, echo=FALSE, fig.height=4}
+
+here::here("images/")
+
+img = paste0(here::here() ,"/images/ppe_poll_2.jpeg")
+
+ggbackground(waste, img)
 
 ```
 
-Row {data-width=350}
------------------------------------------------------------------------
 
-### Chart B
+Column
+-----------------------------------------------------------
 
-```{r}
+### Solutions
 
-waste
+**Less of this...**
 
-```
+![](../images/ppe_poll_2.jpeg)
 
-### Chart C
+*****
 
-```{r}
+**We need more of this...**
 
-```
+![](../images/i7.jpg) 
+![](../images/i6.jpg) 
+![](../images/i5.jpg)
+
+
 
