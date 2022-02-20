@@ -3,9 +3,9 @@ title: "MOD007691"
 author: '2050707'
 date: "14/02/2022"
 output:
-  word_document: default
   html_document:
     number_sections: yes
+  word_document: default
 subtitle: Assignment E010
 bibliography: references.bib
 ---
@@ -14,7 +14,9 @@ bibliography: references.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Introduction
+# Preventing Pandemic Plastic Pollution (PPPP)
+
+## Introduction
 
 1.  The Chartered Institute of Environmental Health (CIEH) represents Environmental Health practitioners (EHPs) across the UK.
 
@@ -28,11 +30,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 5.  We welcome the opportunity to submit evidence on the growing threat plastic pollution poses to food safety, the environment and public health.
 
-# Evidence
+6.  In particular we want to draw attention to the developing burden of plastic pollution posed by single use plastics contained with Personal Protective Equipment (PPE) which is a consequence of the COVID19 pandemic.
 
-## The scale of the problem
+## Evidence
 
-1.  Since the1950s more than 8.5 billion tons of plastic have been generated of which an estimated 600 million tons have been recycled (7%) and 5700 million tons (67%) has been discarded or burned.[^1] plastic waste.(@geyer2017) Over than 300 million tons are produced each year, of which 40% are single-use.(@waring2018a)
+### The scale of plastic pollution
+
+1.  Since the1950s more than 8.5 billion tons of plastic have been generated globally, of which an estimated 600 million tons have been recycled (7%) and 5700 million tons (67%) have been discarded or burned.[^1] (@geyer2017) Over than 300 million tons of are produced each year, of which 40% are single-use.(@waring2018a)
 
 2.  In a single year over 10 million tons of plastic waste is estimated to enter the oceans from the 192 coastal countries around the world. (@jambeck2015)
 
@@ -42,17 +46,40 @@ knitr::opts_chunk$set(echo = TRUE)
 
 5.  Although macroplastics can directly harm larger animals, MPs and NPs are now ubiquitous in the environment and there is widespread human and ecosystem exposure.
 
-6.  Microplastic pollution has been found in the Antarctic (@cunningham), and in deep-see marine animals in the Mariana Trench at a depth of 10,000m. (@jamieson2019)
+6.  Microplastic pollution has been found in the Antarctic (@cunningham), and in deep-sea marine animals in the Mariana Trench at a depth of 10,000m. (@jamieson2019)
 
-[^1]: The rest is still in use
+### PPE pollution 
 
-## Human exposure to microplastics
+1.  Plastic pollution from PPE derives from face masks, disposable gloves, hand sanitiser bottles and wipes.
+2.  Face masks are single-use and are made of polypropylene, polyurethane, polyacrylonitrile, polystyrene, polycarbonate, polyethylene, or polyester polymers. @potluri2005
+3.  Face masks cannot be recycled and must be disposed of in 'black-bin' household waste @coronavi
+4.  
+
+### PPE volumes
+
+1.  It is estiamted that 8.4 million tonees of pandemic-associated ppastic waste was generated globally upto August 2021. @Peng2021
+
+2.  A study using crowd sourced data from the Litterati app in 14 countries found an increase in COVID related litter (masks, gloves and wipes) pre to post declaration of the COVID pandemic.@roberts2021 The overall volume of litter was also related to lock downs.
+
+3.  In the UK, the proportion of COVID related litter grew from 4% of items in 2019, to over 8% of items in the latter half of 2020.
+
+4.  The proportion of reported litter related to COVID was higher in the UK than other countries.
+
+5.  Chowdury et al estimated face mask use across countries as:
+
+$$
+D = P_c*cp*ma*du/10000
+$$
+
+where D = daily mask use; Pc = coastal population; cp = percentage of coastal population; ma = mask acceptance; du = daily mask use
+
+## Human exposure to microplastics {style="color: blue"}
 
 1.  There are 3 main routes for human MP exposure - ingestion, inhalation and transdermal (through the skin).
 
 2.  Ingestion occurs principally through consumption of contaminated drinking water and seafood. Most MPs will pass through the digestive system but there is evidence that PMs can enter the body through lymphoid tissues in the gut (Peyer's patches) where the particles can be ingested by specialised M-cells. This can lead to localised inflammation.
 
-3.  One study comparing MP excretion in 50 healthy adults with 52 patients with Inflammatory Bowel Disease, found significantly more items in the faeces of the IBD group than the healthy group (41.8 items/gm vs. 28.0 items/gm).@yan2022
+3.  One study comparing MP excretion in 50 healthy adults with 52 patients with Inflammatory Bowel Disease, found significantly more items in the faeces of the IBD group than the healthy group (41.8 items/gm vs. 28.0 items/gm).\@yan2022
 
 4.  Inhalation - microfibres from clothing, tyre and road wear
 
@@ -64,9 +91,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 -   MPs have been found in human faeces and
 
--   In one Italian study of 6 post-partum plcental tissues using Raman specostrcopy[^2] found evidence of MPs in 4. (@ragusa2021)
-
-[^2]: A technque for charactising plastic particles
+-   In one Italian study of 6 post-partum placental tissues using Raman spectroscopy[^2] found evidence of MPs in 4. (@ragusa2021)
 
 ## Potential harmful effects
 
@@ -80,7 +105,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 
 
-# Recommendations
+## Recommendations
 
 1.  Actions to reduce exposure
 
@@ -92,4 +117,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 5.  Plastic
 
-# References
+## References
+
+[^1]: The rest is still in use
+
+[^2]: A technique for characterising plastic particles
