@@ -4,7 +4,7 @@ author: "Julian Flowers"
 date: "22/01/2022"
 output: html_document
 params:
-   search: "microplastic pollution"
+   search: "face masks pollution"
 ---
 
 ```{r setup, include=FALSE}
@@ -19,7 +19,7 @@ pacman::p_load_gh("trinker/entity")
 
 
 
-## search Guardian for articles on wildlife conservation
+## search Guardian for articles on `r params$search`
 
 ## reads open data platform
 
@@ -30,18 +30,20 @@ pacman::p_load_gh("trinker/entity")
 guardianapi::gu_api_key(check_env = TRUE)
 
 
-last_month <- guardianapi::gu_content(query = "PPE", from_date = today() - days(365), to_date = today())
-
-last_month %>%
-  filter(section_id == "environment")
-
-
+last_month <- guardianapi::gu_content(query = params$search, from_date = today() - days(365), to_date = today())
 
 last_month_articles <- last_month %>%
   mutate(date = ymd(str_sub(web_publication_date, 1, 10))) %>%
-  select(date, web_title, headline, short_url, section_name) 
+  select(date, web_title, headline, short_url, section_name) %>%
+  DT::datatable(extensions = "Buttons", 
+                escape = FALSE, 
+                options = list(
+                  dom = "Bfrtip", 
+                  buttons = c("csv", "excel"), 
+                  pageLength = 50
+                ))
 
-last_month_articles$headline
+last_month_articles
 ```
 
 ```{r}
