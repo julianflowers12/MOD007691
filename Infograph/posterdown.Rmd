@@ -12,8 +12,8 @@ title_textsize: "20px"
 font_family: "Arial"
 body_bgcol: "#53868B"
 output: 
-  posterdown::posterdown_betterport:
-    self_contained: false
+  posterdown::posterdown_html:
+    self_contained: true
     pandoc_args: --mathjax
     number_sections: false
     highlight: espresso
@@ -35,7 +35,7 @@ options(knitr.table.format = "html")
 
 ```{r, include=FALSE}
 knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
-library(flexdashboard); library(tidyverse); library(fontawesome); library(ggpubr); library(ggimage); library(magick)
+library(flexdashboard); library(tidyverse); library(fontawesome); library(ggpubr); library(ggimage); library(magick);library(ggtext)
 #source("../code/infographic.R")
 source("../covid_litter_uk.R")
 data <- read_rds("../output/mask_pollution.rds")
@@ -43,50 +43,63 @@ data_1 <- read_rds("../data/covid_poll.rds")
 
 ```
 
-<p style="font-family: arial; font-size:20pt; color:yellow">PPE has been essential for preventing teh spread of COVID but it has had unintended consequences...</p>
 
 ```{r}
 uk <- data %>%
-  filter(Countries == "United Kingdom")
+  filter(Countries == "United Kingdom")  %>%
+  mutate(values = parse_number(values)) %>%
+  .[c(9, 13:14),]
+  
 
-dfm <- uk %>%
-  filter(metric == "Daily face mask usage") %>%
-  pluck("values")
+label = "Daily mask usage 46.5 Mt\nSurgical mask waste 61 kt\nFFP waste 37 kt"
+  
 
-
-sm_waste <- uk %>%
-  filter(metric == "Plastic waste from SM in ton") %>%
-  pluck("values")
-
-ff2 <- uk %>%
-  filter(metric == "Plastic waste from N95 in ton") %>%
-  pluck("values")
 ```
 
-```{r fig.height=5}
+
+
+<p style="font-family: helvetica; font-size:20pt; font-weight:bold; color:goldenrod">Face masks have helped reduce the spread of COVID but...</p>   
+
+<p style="font-family: 'fantasy', 'copperplate'; font-size:16pt; font-weight:bold; color:white">Billions of face masks have been discarded</p>
+
+
+```{r, eval=FALSE}
+valueBox(dfm, caption = "Daily use")
+```
+
+
+```{r fig.height=3.5}
 
 w1 <- data_1 %>%
   mutate(fm = parse_number(`Estimated daily facemask discarded`),
     face_mask_discarded_Mt = fm/ 10^6, 
     uk = ifelse(Country == "United Kingdom", "uk", "n")) %>%
   ggplot() +
-  geom_col(aes(reorder(Country, face_mask_discarded_Mt), face_mask_discarded_Mt, fill = uk), show.legend = FALSE) + coord_flip() +
+  geom_col(aes(reorder(Country, face_mask_discarded_Mt), face_mask_discarded_Mt, fill = uk), show.legend = FALSE) + 
   scale_y_continuous(label = scales::comma) +
   scale_fill_manual(values = c("red", "black")) +
   labs(y = "Masks discarded (millions)", 
        x = "") +
   #theme_minimal() +
-  theme(axis.text = element_text(colour = "white", size = 12, face = "bold"), 
-        axis.title = element_text(colour = "white", size = 14, face = "bold"))
+  theme(axis.text.x = element_text(colour = "white", size = 10, face = "bold", angle = 45, hjust = 1), 
+        axis.text.y = element_text(colour = "white", size = 10, face = "bold"),
+        axis.title = element_text(colour = "white", size = 12, face = "bold"), 
+        panel.grid = element_blank())
 
 ggbackground(w1,  "../images/i2.jpg") +
-  ggtitle("Billions of face masks have been discarded \ninto the environment since the start of \nthe COVID pandemic") +
+  # ggtitle("Billions of face masks have been discarded \ninto the environment since the start of \nthe COVID pandemic") +
   theme(plot.title = element_text(size = 20, face = "bold")) +
   labs(caption = "Source: https://commons.wikimedia.org/wiki/Data:Plastic_waste_percentages_-_Jambeck_et_al"
  )
 ```
 
-```{r}
+<p style="font-family: 'fantasy', 'copperplate'; font-size:16pt; font-weight:bold; color:white">Face mask pollution in the UK is growing </p>
+
+```{r, fig.height=3.5}
+
+  df <- data.frame(date = as.Date("2020-02-01"),
+                 prop = 10, 
+                 label = label)
 
 cc <- covid_counts %>%
   mutate(date = lubridate::make_date(year, month, "01"))%>%
@@ -97,39 +110,42 @@ cc <- covid_counts %>%
   theme_minimal() +
   labs(x = "", 
        y = "COVID-related debris (% of total)") +
-  theme(axis.text = element_text(colour = "white"), 
-        axis.title = element_text(colour = "white")) +
-    annotate("text", x = as.Date("2020-01-01"), y = 13, label = "Pandemic declared", colour = "white", size = 5)
-
+  theme(axis.text = element_text(colour = "white", size = 10), 
+        axis.title = element_text(colour = "white", size = 14), 
+        panel.grid = element_blank(),
+        axis.line = element_blank()) +
+    annotate("text", x = as.Date("2020-01-01"), y = 13, label = "Pandemic declared", colour = "white", size = 5) +
+  geom_textbox(data = df, aes(date, prop, label = label, hjust = 1))
 
 ggbackground(cc,  "../images/i2.jpg") +
-  ggtitle("COVID-related pollution is growing") +
-  theme(plot.title = element_text(size = 20, face = "bold")) +
-  labs(caption = "Analysis of https://www.nature.com/articles/s41893-021-00824-1")
+  #ggtitle("COVID-related pollution is growing") +
+  theme(plot.title = element_text(size = 30, face = "bold")) +
+  labs(caption = "Analysis of https://www.nature.com/articles/s41893-021-00824-1") 
 
 ```
 
-# What is PPE
+<span style="font-family: 'fantasy', 'copperplate'; font-size:18pt; font-weight:bold; color:white">Face masks include</span>
 
-<p style="font-family: arial; font-size:20pt; color:yellow">Surgical face-masks and FFP2 masks are single-use plastics</p>
 
-![](../images/i1.jpg) ![](../images/i3.jpg)
+|                      |                      |     
+|----------------------:|:---------------------:|:------|
+|   <span style="font-family: arial; font-size:16pt; color:yellow">Respirator (FFP)</span> |  ![](../images/i1.jpg){height=50%, width=50%}| <span style="font-family: arial; font-size:16pt; color:blue">Single use plastic</span>
+|   <span style="font-family: arial; font-size:16pt; color:yellow">Surgical facemask</span>|  ![](../images/i3.jpg){height=50%, width=50%} | Single use plastic|
+<span style="font-family: arial; font-size:16pt; color:yellow">Cloth</span>|![](../images/i8.jpg){height=50%, width=50%}|Reusable|
+
+
+ 
 
 # Why worry?
 
--   t
--   t
--   t
--   
--   
--   
+Its harming marine life
 
-# What can we do about it?
+![](../images/whales.jpg)
 
--   t
--   t
--   t
+# What can you do about it?
 
-![](../images/i4.jpg) ![](../images/i5.jpg) ![](../images/i6.jpg)
+|<span style="font-family: arial; font-size:20pt; color:yellow">Pick it</span>              |   <span style="font-family: arial; font-size:20pt; color:yellow">Bin it </span>               |    <span style="font-family: arial; font-size:20pt; color:yellow">Make it</span>          |
+|:----------------------:|:-----------------------:|:---------------------:|
+|![](../images/i4.jpg) | ![](../images/i5.jpg) |![](../images/i6.jpg)|
 
-# References
+
